@@ -101,8 +101,38 @@ public class SinglyLinkedList<E extends Comparable<E>> {
 
     // write your codes here
     public void swap(){
-        
+        // 0 1 2 null
+        // build ascending list first
+        // then array access the sorted list for each
+        // element then find the corresponding swap, on^2
+        if (size < 2) return;
+        Node<E> walk = head;
+        // int[] arr = new int[size];
+        ArrayList<E> sorted = new ArrayList<>();
 
+        while (walk != null) {
+            // arr[i] = (int)walk.getElement();
+            // i++;
+            sorted.add(walk.getElement());
+            walk = walk.getNext();
+        }
+        Collections.sort(sorted);
+        walk = head;
+        int arr_length = sorted.size();
+        SinglyLinkedList<E> newlist = new SinglyLinkedList<>();
+        while (walk != null) {
+            E curr_element = walk.getElement();
+            for (int j = 0; j < arr_length; j++) {
+                if (curr_element == sorted.get(j)) {
+                    // while walking list, build new list one at a time
+                    E replace = sorted.get(arr_length - 1 - j);
+                    newlist.addLast(replace);
+                }
+            }
+            walk = walk.getNext();
+        }
+        head = newlist.head;
+        tail = newlist.tail;
     }
    
 }
