@@ -127,6 +127,7 @@ public class SinglyLinkedList<E extends Comparable<E>> {
                     // while walking list, build new list one at a time
                     E replace = sorted.get(arr_length - 1 - j);
                     newlist.addLast(replace);
+                    break;
                 }
             }
             walk = walk.getNext();
