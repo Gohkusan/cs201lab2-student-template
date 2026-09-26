@@ -108,6 +108,7 @@ public class SinglyLinkedList<E extends Comparable<E>> {
         if (size < 2) return;
         Node<E> walk = head;
         // int[] arr = new int[size];
+        // use arraylist to store elements instead off primitive arr
         ArrayList<E> sorted = new ArrayList<>();
 
         while (walk != null) {
@@ -117,19 +118,25 @@ public class SinglyLinkedList<E extends Comparable<E>> {
             walk = walk.getNext();
         }
         Collections.sort(sorted);
-        walk = head;
         int arr_length = sorted.size();
+        // use hashmap to bring f(n^2) to f(n) replacement but overall is still o(nlogn) due to collections.sort
+        HashMap<E,Integer>rank_indices = new HashMap<>();
+        for (int z = 0; z < arr_length; z++) rank_indices.put(sorted.get(z),z);
+        walk = head;
         SinglyLinkedList<E> newlist = new SinglyLinkedList<>();
         while (walk != null) {
             E curr_element = walk.getElement();
-            for (int j = 0; j < arr_length; j++) {
-                if (curr_element == sorted.get(j)) {
-                    // while walking list, build new list one at a time
-                    E replace = sorted.get(arr_length - 1 - j);
-                    newlist.addLast(replace);
-                    break;
-                }
-            }
+            int index = rank_indices.get(curr_element);
+            E replacement = sorted.get(arr_length - 1 - index);
+            newlist.addLast(replacement);
+            // for (int j = 0; j < arr_length; j++) {
+            //     if (curr_element == sorted.get(j)) {
+            //         // while walking list, build new list one at a time
+            //         E replace = sorted.get(arr_length - 1 - j);
+            //         newlist.addLast(replace);
+            //         break;
+            //     }
+            // }
             walk = walk.getNext();
         }
         head = newlist.head;
