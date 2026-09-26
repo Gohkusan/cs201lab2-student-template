@@ -106,41 +106,78 @@ public class SinglyLinkedList<E extends Comparable<E>> {
         // then array access the sorted list for each
         // element then find the corresponding swap, on^2
         if (size < 2) return;
+        // in place swapping of sll
+        // copy sll into arraylist
+        ArrayList<Node<E>> orig = new ArrayList<>();
         Node<E> walk = head;
-        // int[] arr = new int[size];
-        // use arraylist to store elements instead off primitive arr
-        ArrayList<E> sorted = new ArrayList<>();
+        while(walk != null) {
+            orig.add(walk);
+            walk = walk.getNext();
+        }
+        // copy the orig into another arraylist then sort nodes by elements rather than nodes b
+        // because java doesnt know how to sort nodes by themselves, so you need
+        // to provide the logic to compare nodes
+        // if java actually knows how to compare the collection of objects, it means
+        // the object implements comparable already, so you use collections.sort(<listname>)
+        // Collections.sort(sorted, comparator)
+        // sorted.sort(comparator)
+        ArrayList<Node<E>> sorted = new ArrayList<>(orig);
+        sorted.sort((a,b) -> a.getElement().compareTo(b.getElement()));
 
-        while (walk != null) {
-            // arr[i] = (int)walk.getElement();
-            // i++;
-            sorted.add(walk.getElement());
-            walk = walk.getNext();
+        // build map mapping element to their rank in sorted
+        HashMap<E, Integer>ranking = new HashMap<>();
+        for (int i = 0 ; i < size; i++ ) {
+            ranking.put(sorted.get(i).getElement(), i);
+        } 
+        // build mirrored list now or build mirrored list now
+        Node<E> prev = null;
+        for (int i = 0 ; i < size; i++) {
+            Node<E> mirrornode = sorted.get(size - 1 - ranking.get(orig.get(i).getElement()));
+            if (prev == null) {
+                head = mirrornode;
+            } else {
+                prev.setNext(mirrornode);
+            }
+            prev = mirrornode;
         }
-        Collections.sort(sorted);
-        int arr_length = sorted.size();
-        // use hashmap to bring f(n^2) to f(n) replacement but overall is still o(nlogn) due to collections.sort
-        HashMap<E,Integer>rank_indices = new HashMap<>();
-        for (int z = 0; z < arr_length; z++) rank_indices.put(sorted.get(z),z);
-        walk = head;
-        SinglyLinkedList<E> newlist = new SinglyLinkedList<>();
-        while (walk != null) {
-            E curr_element = walk.getElement();
-            int index = rank_indices.get(curr_element);
-            E replacement = sorted.get(arr_length - 1 - index);
-            newlist.addLast(replacement);
-            // for (int j = 0; j < arr_length; j++) {
-            //     if (curr_element == sorted.get(j)) {
-            //         // while walking list, build new list one at a time
-            //         E replace = sorted.get(arr_length - 1 - j);
-            //         newlist.addLast(replace);
-            //         break;
-            //     }
-            // }
-            walk = walk.getNext();
-        }
-        head = newlist.head;
-        tail = newlist.tail;
+        tail = prev;
+        prev.setNext(null);
+
+        // Node<E> walk = head;
+        // // int[] arr = new int[size];
+        // // use arraylist to store elements instead off primitive arr
+        // ArrayList<E> sorted = new ArrayList<>();
+
+        // while (walk != null) {
+        //     // arr[i] = (int)walk.getElement();
+        //     // i++;
+        //     sorted.add(walk.getElement());
+        //     walk = walk.getNext();
+        // }
+        // Collections.sort(sorted);
+        // int arr_length = sorted.size();
+        // // use hashmap to bring f(n^2) to f(n) replacement but overall is still o(nlogn) due to collections.sort
+        // HashMap<E,Integer>rank_indices = new HashMap<>();
+        // for (int z = 0; z < arr_length; z++) rank_indices.put(sorted.get(z),z);
+        // walk = head;
+        // SinglyLinkedList<E> newlist = new SinglyLinkedList<>();
+        // while (walk != null) {
+        //     E curr_element = walk.getElement();
+        //     int index = rank_indices.get(curr_element);
+        //     E replacement = sorted.get(arr_length - 1 - index);
+        //     newlist.addLast(replacement);
+        //     // for (int j = 0; j < arr_length; j++) {
+        //     //     if (curr_element == sorted.get(j)) {
+        //     //         // while walking list, build new list one at a time
+        //     //         E replace = sorted.get(arr_length - 1 - j);
+        //     //         newlist.addLast(replace);
+        //     //         break;
+        //     //     }
+        //     // }
+        //     walk = walk.getNext();
+        // }
+        // head = newlist.head;
+        // tail = newlist.tail;
     }
    
 }
